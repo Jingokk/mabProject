@@ -29,6 +29,20 @@ const App = () => {
     setInputIndex(i);
   };
 
+  const deleteRow = (ind) => {
+    let clone = [...index];
+    clone.splice(ind, 1);
+
+    for (let i = 0; i < clone.length; i++) {
+      if (clone[i].index > ind) {
+        clone[i].index -= 1;
+      }
+    }
+
+    setIndex(clone);
+    socket.emit("message", clone);
+  };
+
   return (
     <VStack
       bg={"#ddd"}
@@ -69,6 +83,15 @@ const App = () => {
                 if (e.key === "ArrowDown") {
                   if (myRefs.current[i + 1]) {
                     myRefs.current[i + 1].focus();
+                  }
+                }
+                if (index[i].text === "") {
+                  if (e.key === "Backspace") {
+                    e.preventDefault();
+                    deleteRow(i);
+                    if (myRefs.current[i - 1]) {
+                      myRefs.current[i - 1].focus();
+                    }
                   }
                 }
               }}
